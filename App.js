@@ -1,20 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import AppLoading from 'expo-app-loading'; // Import AppLoading
+import * as Font from 'expo-font';
+import React, { useState } from 'react';
+import Navigator from "./routes/appDrawer";
+
+const getFonts = () => Font.loadAsync({
+  'comic-neue': require('./assets/fonts/ComicNeue-Regular.ttf'),
+  'comic-neue-bold': require('./assets/fonts/ComicNeue-Bold.ttf'),
+});
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (fontsLoaded) {
+    return (
+      <NavigationContainer>
+        <Navigator />
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <AppLoading 
+        startAsync={getFonts}
+        onFinish={() => setFontsLoaded(true)}
+        onError={console.warn}  // handle errors
+      />
+    );
+  }
+}
